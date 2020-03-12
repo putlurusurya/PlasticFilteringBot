@@ -209,23 +209,23 @@ def astar(Mat, start, end):
 def Bot_movement(path,img):
     aruco_list=detect_Aruco(img)
     key=path.top()
-    Bot_pos=Aruco_centre(img,aruco_list)
+    Bot_pos,centre,orient_center=Aruco_centre(img,aruco_list)
+    slope=(orient_center[1]-centre[1])/(orient_center[0]-centre[0])
+    curr_slope=(key[1]-centre[1])/(key[0]-centre[0])
     if Bot_pos[0] in range(0.9*key[0],1.1*key[0]) and Bot_pos[1] in range(0.9*key[1],1.1*key[1]) :
         path.pop()
         mov='s'
         return path,mov
-    elif Bot_pos[0] in range(0.9*key[0],1.1*key[0]) and Bot_pos[1]>key[1]:
-        mov='d'
+    else:
+        mov=rotation(curr_slope,slope)
         return path,mov
-    elif Bot_pos[1] in range(0.9*key[1],1.1*key[1]) and Bot_pos[0]>key[0]:
-        mov='l'
-        return path,mov
-    elif Bot_pos[1] in range(0.9*key[1],1.1*key[1]) and Bot_pos[0]<key[0]:
-        mov='r'
-        return path,mov
-    elif Bot_pos[0] in range(0.9*key[0],1.1*key[0]) and Bot_pos[1]<key[1]:
-        mov='u'
-        return path,mov
+def rotation(curr_slope,slope):
+    if curr_slope in range (0.95*slope,1.05*slope):
+        return 'f'
+    elif slope>curr_slope:
+        return 'r'
+    elif slope<curr_slope:
+        return 'l'
 
         
         
